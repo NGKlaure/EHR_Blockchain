@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Grant Access</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+		
+		<h1>WELCOME TO EHRCHAIN</h1>
+
+		 <h3>Grant Access to a Doctor </h3>
+
+			<label for="name" class="col-lg-2 control-label">Doctor address</label>
+			<input id="address" type="text">
+
+            <button id="button">grant access</button>
+            
+            <button id="button1">Revoke access</button>
+            
+            <button id="button2">check access</button>
+            
+			<h2 id="instructor"></h2>
+			
+	
+                <a href="index.html"><h3>go to send data</h3> </a> 
+				<a href="getData.html"><h3>go to Get data</h3> </a> 
+				<a href="updateData.html"><h3>go to update data</h3> </a> 
+		
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+       if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        }
+
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+		//web3.eth.defaultAccount = web3.eth.defaultAccounts[0];
+
+var EHRChainContract = web3.eth.contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "doctor",
+				"type": "address"
+			}
+		],
+		"name": "grantAccess",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "userAddress",
+				"type": "address"
+			},
+			{
+				"name": "DoctorAddress",
+				"type": "address"
+			},
+			{
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"name": "userAge",
+				"type": "uint256"
+			},
+			{
+				"name": "infos",
+				"type": "string"
+			}
+		],
+		"name": "insertUserRecord",
+		"outputs": [
+			{
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "userAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "index",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "userAge",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "infos",
+				"type": "string"
+			}
+		],
+		"name": "LogNewUser",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "userAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "index",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "userAge",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "infos",
+				"type": "string"
+			}
+		],
+		"name": "LogUpdateUser",
+		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "revokeAccess",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "userAddress",
+				"type": "address"
+			},
+			{
+				"name": "DoctorAddress",
+				"type": "address"
+			},
+			{
+				"name": "userAge",
+				"type": "uint256"
+			}
+		],
+		"name": "updateUserAge",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "userAddress",
+				"type": "address"
+			},
+			{
+				"name": "DoctorAddress",
+				"type": "address"
+			},
+			{
+				"name": "infos",
+				"type": "string"
+			}
+		],
+		"name": "updateUserInfos",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "doctor",
+				"type": "address"
+			}
+		],
+		"name": "didIGaveRights",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "x",
+				"type": "address"
+			}
+		],
+		"name": "doIHaveRights",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getUserCount",
+		"outputs": [
+			{
+				"name": "count",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "userAddress",
+				"type": "address"
+			},
+			{
+				"name": "DoctorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getUserRecord",
+		"outputs": [
+			{
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"name": "userAge",
+				"type": "uint256"
+			},
+			{
+				"name": "infos",
+				"type": "string"
+			},
+			{
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]);
+
+var EHRChain = EHRChainContract.at('0x670e65cf46dbfe79e3811becb96bfcf5dce6be73');
+console.log(EHRChain);
+
+$("#button").click(function() {
+    EHRChain.grantAccess($("#address").val());
+        });
+
+ $("#button1").click(function() {
+    EHRChain.revokeAccess($("#address").val());
+        });
+
+ $("#button2").click(function() {
+     EHRChain.didIGaveRights($("#address").val(), function(error, result){
+            if(!error)
+                {
+                    $("#instructor").html(result );
+                    console.log(result);
+                }
+            else
+                console.error(error);});
+ });
+
+ 
+    </script>
+
+</body>
+</html>
