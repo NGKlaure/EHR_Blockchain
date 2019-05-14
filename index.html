@@ -290,6 +290,41 @@ var EHRChainContract = web3.eth.contract([
 	},
 	{
 		"constant": true,
+		"inputs": [
+			{
+				"name": "index1",
+				"type": "uint256"
+			},
+			{
+				"name": "userAddress",
+				"type": "address"
+			}
+		],
+		"name": "getDataAtIndex",
+		"outputs": [
+			{
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"name": "userAge",
+				"type": "uint256"
+			},
+			{
+				"name": "infos",
+				"type": "string"
+			},
+			{
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
 		"inputs": [],
 		"name": "getUserCount",
 		"outputs": [
@@ -339,7 +374,7 @@ var EHRChainContract = web3.eth.contract([
 	}
 ]);
 
-var EHRChain = EHRChainContract.at('0x670e65cf46dbfe79e3811becb96bfcf5dce6be73');
+var EHRChain = EHRChainContract.at('0x2234961f88a9c90272da4e7398a4d9ede819edcb');
 console.log(EHRChain);
 
 
@@ -355,9 +390,12 @@ console.log(EHRChain);
                 console.error(error);});
  });
 
- $("#button3").click(function() {
+ 
+  $("#button3").click(function() {
     EHRChain.insertUserRecord($("#uaddress").val(), $("#daddress").val(),$("#uname").val(), $("#uage").val(), $("#uinfos").val() );
         });
+
+ 
     </script>
 
 </body>
